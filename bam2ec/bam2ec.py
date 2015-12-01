@@ -209,10 +209,10 @@ def convert(file_in, file_out, target_file=None, emase=False):
                 temp_transcripts.append(read_transcript_idx)
 
             if line_no % 1000000 == 0:
-                LOG.debug("{0:,} reads processed, with {1:,} ec classes".format(line_no, len(ec)))
+                LOG.info("{0:,} reads processed, with {1:,} ec classes".format(line_no, len(ec)))
 
     except StopIteration:
-        LOG.debug("{0:,} reads processed, with {1:,} ec classes".format(line_no, len(ec)))
+        LOG.info("{0:,} reads processed, with {1:,} ec classes".format(line_no, len(ec)))
 
     haplotypes = sorted(list(haplotypes))
 
