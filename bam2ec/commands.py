@@ -20,7 +20,8 @@ def command_convert(raw_args, prog=None):
     -o, --output <output file>       file to create
 
     Optional Parameters:
-    -e, --emase                      file format
+    -e, --emase                      Emase file format
+    -t, --target <Target file>       target file name
 
     Help Parameters:
     -h, --help                       print the help and exit
@@ -49,6 +50,8 @@ def command_convert(raw_args, prog=None):
 
     # optional
     parser.add_argument("-e", "--emase", dest="emase", action='store_true')
+    parser.add_argument("-t", "--target", dest="target", metavar="Target_File")
+
 
     # debugging and help
     parser.add_argument("-h", "--help", dest="help", action='store_true')
@@ -70,7 +73,7 @@ def command_convert(raw_args, prog=None):
         print_message()
 
     try:
-        bam2ec.convert(args.input, args.output, args.emase)
+        bam2ec.convert(args.input, args.output, args.target, args.emase)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:

@@ -120,18 +120,37 @@ def _show_error():
         tb = tb.tb_next
 
 
+def parse_target_file(target_file):
+    targets = OrderedDict()
+    with open(target_file, 'r') as f:
+        for line in f:
+            if line and line[0] == '#':
+                continue
+            _id = line.strip().split()[0]
+            targets[_id] = len(targets)
+    return targets
 
-def convert(file_in, file_out, emase=False):
+
+def convert(file_in, file_out, target_file=None, emase=False):
     LOG.info('Input File: {}'.format(file_in))
     LOG.info('Output File: {}'.format(file_out))
 
+    if target_file:
+        LOG.info('Target File: {}'.format(target_file))
+
     if emase:
-        LOG.debug('Emase format requested')
+        LOG.info('Emase format requested')
+
+    main_targets = OrderedDict()
+
+    if target_file:
+        main_targets = parse_target_file(target_file)
+        if len(main_targets) == 0:
+            LOG.error("Unable to parse target file")
+            sys.exit(-1)
 
     ec = OrderedDict()
     ec_idx = {}
-
-    main_targets = OrderedDict()
 
     haplotypes = set()
 
@@ -158,13 +177,19 @@ def convert(file_in, file_out, emase=False):
             read_transcript_idx = str(alignment.tid)
             #print read_transcript, read_transcript_idx
 
-            main_target = read_transcript[:-2]
+            main_target = read_transcript.split('_')[0]
 
-            if main_target not in main_targets:
-                main_targets[main_target] = len(main_targets)
+            if target_file:
+                if main_target not in main_targets:
+                    LOG.error("Unexpected target found in BAM file: {}".format(main_target))
+                    sys.exit(-1)
 
-            target_idx_to_main_target[read_transcript_idx] = main_target #main_targets[main_target]
-            haplotypes.add(read_transcript[-1])
+            else:
+                if main_target not in main_targets:
+                    main_targets[main_target] = len(main_targets)
+
+            target_idx_to_main_target[read_transcript_idx] = main_target
+            haplotypes.add(read_transcript.split('_')[1])
 
             if read_id is None:
                 read_id = alignment.qname
