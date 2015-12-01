@@ -344,7 +344,7 @@ def view(binary_file_name, detail=False):
         targets[target] = i
         target_ids.append(target)
         if detail:
-            LOG.info(i, target)
+            LOG.info("{}\t{}".format(i, target))
 
     # HAPLOTYPES
 
@@ -360,7 +360,7 @@ def view(binary_file_name, detail=False):
         haplotypes[haplotype] = i
         haplotype_ids.append(haplotype)
         if detail:
-            LOG.info(i, haplotype)
+            LOG.info("{}\t{}".format(i, haplotype))
 
     if file_version == 0:
 
