@@ -254,7 +254,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
             aln_mat_kallisto.finalize()
             aln_mat_kallisto.save(file_out, title='bam2ec')
 
-            LOG.info("Done with exporting an emase format file.")
+            LOG.info("Done with converting bam file to the emase format.")
         except:
             _show_error()
 
@@ -328,7 +328,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
                 f.write(pack('<i', list_to_int(bits)))
 
         f.close()
-        LOG.info("DONE with exporting a binary format file.")
+        LOG.info("DONE with converting bam file to the binary format.")
 
 
 def view(binary_file_name, detail=False):
