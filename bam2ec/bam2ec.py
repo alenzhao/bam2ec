@@ -209,10 +209,10 @@ def convert(file_in, file_out, target_file=None, emase=False):
                 temp_transcripts.append(read_transcript_idx)
 
             if line_no % 1000000 == 0:
-                LOG.info("{0:,} reads processed, with {1:,} ec classes".format(line_no, len(ec)))
+                LOG.info("{0:,} alignments processed, with {1:,} equivalence classes".format(line_no, len(ec)))
 
     except StopIteration:
-        LOG.info("{0:,} reads processed, with {1:,} ec classes".format(line_no, len(ec)))
+        LOG.info("{0:,} alignments processed, with {1:,} equivalence classes".format(line_no-1, len(ec)))
 
     haplotypes = sorted(list(haplotypes))
 
@@ -254,7 +254,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
             aln_mat_kallisto.finalize()
             aln_mat_kallisto.save(file_out, title='bam2ec')
 
-            LOG.info("DONE")
+            LOG.info("Done with exporting an emase format file.")
         except:
             _show_error()
 
@@ -328,8 +328,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
                 f.write(pack('<i', list_to_int(bits)))
 
         f.close()
-
-    LOG.info("Done!")
+        LOG.info("DONE with exporting a binary format file.")
 
 
 def view(binary_file_name, detail=False):
