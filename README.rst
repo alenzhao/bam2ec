@@ -9,14 +9,18 @@ Convert BAM and SAM files to binary format with Equivalence Classes
 
 Commands
 --------
-
 bam2ec [subcommand]
 
-The most commonly used sub commands are:
-
-       convert       convert file
-       dump          view file
-       ec2emase      convert binary file to EMASE format
-       emase2ec      convert EMASE format to binary file
++---------+---------------------------------------+
+|*subcommands*                                    |
++---------+---------------------------------------+
+|convert  |convert file                           |
++---------+---------------------------------------+
+|dump     |view file                              |
++---------+---------------------------------------+
+|ec2emase |convert binary file to EMASE format    |
++---------+---------------------------------------+
+|emase2ec |convert EMASE format to binary file    |
++---------+---------------------------------------+
 
 
