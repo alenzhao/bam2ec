@@ -133,10 +133,10 @@ def convert(file_in, file_out, target_file=None, emase=False):
     ec_key = None
     tid = None
 
+    target_ids = []
     try:
         read_id = None
 
-        target_ids = []
         while True:
             alignment = sam_file.next()
             line_no += 1
@@ -196,10 +196,10 @@ def convert(file_in, file_out, target_file=None, emase=False):
                     same_read_target_counter += 1
 
             if line_no % 1000000 == 0:
-                LOG.info("{0:,} lines processed, {1:,} ec classes".format(line_no, len(ec)))
+                LOG.info("{0:,} alignments processed, with {1:,} equivalence classes".format(line_no, len(ec)))
 
     except StopIteration:
-        LOG.info("{0:,} lines processed, {1:,} ec classes".format(line_no, len(ec)))
+        LOG.info("{0:,} alignments processed, with {1:,} equivalence classes".format(line_no, len(ec)))
 
     if tid not in target_ids:
         target_ids.append(tid)
@@ -365,6 +365,6 @@ def convert(file_in, file_out, target_file=None, emase=False):
         except:
             utils._show_error()
 
-    LOG.info("Done!")
+    LOG.info("Done with converting BAM file!")
 
 
