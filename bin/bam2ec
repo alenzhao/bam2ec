@@ -45,7 +45,9 @@ class BAM2ECToolsApp(object):
     """
     The most commonly used commands are:
        convert       convert file
-       view          view bin file
+       dump          view file
+       ec2emase      convert binary file to EMASE format
+       emase2ec      convert EMASE format to binary file
 
     """
 
