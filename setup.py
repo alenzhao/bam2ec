@@ -28,6 +28,7 @@ on_rtd = os.environ.get('READTHEDOCS', None)
 if not on_rtd:
     requirements.append('pysam>=0.8.1')
     requirements.append('numpy>1.8')
+    requirements.append("emase>=0.9.8")
 
 
 setup(

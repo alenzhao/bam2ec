@@ -98,8 +98,14 @@ class BAM2ECToolsApp(object):
     def convert(self):
         b2ec.command_convert(sys.argv[2:], self.script_name + ' convert')
 
-    def view(self):
-        b2ec.command_view(sys.argv[2:], self.script_name + ' view')
+    def dump(self):
+        b2ec.command_dump(sys.argv[2:], self.script_name + ' dump')
+
+    def ec2emase(self):
+        b2ec.command_ec2emase(sys.argv[2:], self.script_name + ' ec2emase')
+
+    def emase2ec(self):
+        b2ec.command_emase2ec(sys.argv[2:], self.script_name + ' emase2ec')
 
     def logo(self):
         print logo_text

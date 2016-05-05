@@ -2,9 +2,9 @@
 
 import argparse
 import sys
-import time
 
 from . import bam2ec
+from . import utils
 
 LOG = bam2ec.get_logger()
 
@@ -16,16 +16,16 @@ def command_convert(raw_args, prog=None):
     Usage: convert [-options] -o <Output file> -i <BAM file>
 
     Required Parameters:
-    -i, --input <BAM file>           input file to convert
-    -o, --output <output file>       file to create
+        -i, --input <BAM file>           input file to convert
+        -o, --output <output file>       file to create
 
     Optional Parameters:
-    -e, --emase                      Emase file format
-    -t, --target <Target file>       target file name
+        -e, --emase                      Emase file format
+        -t, --target <Target file>       target file name
 
     Help Parameters:
-    -h, --help                       print the help and exit
-    -d, --debug                      turn debugging on, list multiple times for more messages
+        -h, --help                       print the help and exit
+        -d, --debug                      turn debugging on, list multiple times for more messages
 
     """
 
@@ -51,7 +51,6 @@ def command_convert(raw_args, prog=None):
     # optional
     parser.add_argument("-e", "--emase", dest="emase", action='store_true')
     parser.add_argument("-t", "--target", dest="target", metavar="Target_File")
-
 
     # debugging and help
     parser.add_argument("-h", "--help", dest="help", action='store_true')
@@ -80,21 +79,21 @@ def command_convert(raw_args, prog=None):
         LOG.error(e)
 
 
-def command_view(raw_args, prog=None):
+def command_dump(raw_args, prog=None):
     """
-    View the binary formatted file
+    Dump the binary formatted file
 
     Usage: view [-options] -i <BINary file>
 
     Required Parameters:
-    -i, --input <BINary file>        input file
+        -i, --input <BINary file>        input file
 
     Optional Parameters:
-    -v, --verbose                    verbose output
+        None
 
     Help Parameters:
-    -h, --help                       print the help and exit
-    -d, --debug                      turn debugging on, list multiple times for more messages
+        -h, --help                       print the help and exit
+        -d, --debug                      turn debugging on, list multiple times for more messages
 
     """
 
@@ -107,7 +106,7 @@ def command_view(raw_args, prog=None):
         if message:
             sys.stderr.write(message)
         else:
-            sys.stderr.write(command_view.__doc__)
+            sys.stderr.write(command_dump.__doc__)
         sys.stderr.write('\n')
         sys.exit(1)
 
@@ -117,7 +116,7 @@ def command_view(raw_args, prog=None):
     parser.add_argument("-i", "--input", dest="input", metavar="Input_File")
 
     # optional
-    parser.add_argument("-v", "--verbose", dest="verbose", action='store_true')
+    # none
 
     # debugging and help
     parser.add_argument("-h", "--help", dest="help", action='store_true')
@@ -135,7 +134,141 @@ def command_view(raw_args, prog=None):
         print_message()
 
     try:
-        bam2ec.view(args.input, args.verbose)
+        utils.dump(args.input)
+    except KeyboardInterrupt, ki:
+        LOG.debug(ki)
+    except Exception, e:
+        LOG.error(e)
+
+
+def command_ec2emase(raw_args, prog=None):
+    """
+    Convert a BIN file to EMASE
+
+    Usage: ec2emase [-options] -i <BIN file> -o <EMASE file>
+
+    Required Parameters:
+        -i, --input <BIN file>           input file to convert
+        -o, --output <EMASE file>        file to create
+
+    Optional Parameters:
+        None
+
+    Help Parameters:
+        -h, --help                       print the help and exit
+        -d, --debug                      turn debugging on, list multiple times for more messages
+
+    """
+
+    if prog:
+        parser = argparse.ArgumentParser(prog=prog, add_help=False)
+    else:
+        parser = argparse.ArgumentParser(add_help=False)
+
+    def print_message(message=None):
+        if message:
+            sys.stderr.write(message)
+        else:
+            sys.stderr.write(command_ec2emase.__doc__)
+        sys.stderr.write('\n')
+        sys.exit(1)
+
+    parser.error = print_message
+
+    # required
+    parser.add_argument("-i", "--input", dest="input", metavar="Input_File")
+    parser.add_argument("-o", "--output", dest="output", metavar="Output_File")
+
+    # optional
+
+    # debugging and help
+    parser.add_argument("-h", "--help", dest="help", action='store_true')
+    parser.add_argument("-d", "--debug", dest="debug", action="count", default=0)
+
+    args = parser.parse_args(raw_args)
+
+    bam2ec.configure_logging(args.debug)
+
+    if args.help:
+        print_message()
+
+    if not args.input:
+        LOG.error("No input file was specified.")
+        print_message()
+
+    if not args.output:
+        LOG.error("No output file was specified.")
+        print_message()
+
+    try:
+        utils.ec2emase(args.input, args.output)
+    except KeyboardInterrupt, ki:
+        LOG.debug(ki)
+    except Exception, e:
+        LOG.error(e)
+
+
+def command_emase2ec(raw_args, prog=None):
+    """
+    Convert an EMASE file to BIN file
+
+    Usage: ec2emase [-options] -i <EMASE file> -o <BIN file>
+
+    Required Parameters:
+        -i, --input <EMASE file>         input file to convert
+        -o, --output <BIN file>          file to create
+
+    Optional Parameters:
+        None
+
+    Help Parameters:
+        -h, --help                       print the help and exit
+        -d, --debug                      turn debugging on, list multiple times for more messages
+
+    """
+
+    if prog:
+        parser = argparse.ArgumentParser(prog=prog, add_help=False)
+    else:
+        parser = argparse.ArgumentParser(add_help=False)
+
+    def print_message(message=None):
+        if message:
+            sys.stderr.write(message)
+        else:
+            sys.stderr.write(command_emase2ec.__doc__)
+        sys.stderr.write('\n')
+        sys.exit(1)
+
+    parser.error = print_message
+
+    # required
+    parser.add_argument("-i", "--input", dest="input", metavar="Input_File")
+    parser.add_argument("-o", "--output", dest="output", metavar="Output_File")
+
+    # optional
+
+    # debugging and help
+    parser.add_argument("-h", "--help", dest="help", action='store_true')
+    parser.add_argument("-d", "--debug", dest="debug", action="count", default=0)
+
+    args = parser.parse_args(raw_args)
+
+    bam2ec.configure_logging(args.debug)
+
+    if args.help:
+        print_message()
+
+    if not args.input:
+        LOG.error("No input file was specified.")
+        print_message()
+
+    if not args.output:
+        LOG.error("No output file was specified.")
+        print_message()
+
+    try:
+        utils.emase2ec(args.input, args.output)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
