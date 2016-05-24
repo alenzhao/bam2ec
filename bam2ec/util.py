@@ -13,8 +13,8 @@ import numpy as np
 
 from emase import AlignmentPropertyMatrix as APM
 
-import bam2ec.ec_file as ec_file
-import bam2ec.emase_file as emase_file
+from . import ec_file
+from . import emase_file
 
 VERBOSE_LEVELV_NUM = 9
 

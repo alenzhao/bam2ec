@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-import bam2ec.util as util
+from . import util
 
 LOG = util.get_logger()
 

@@ -5,9 +5,8 @@ import importlib
 import os
 import sys
 
-import bam2ec
-# from bam2ec import __version__ as version
-import bam2ec.commands as commands
+from . import __version__ as version
+from . import commands
 
 ext_modules = ['pysam', 'emase', 'numpy']
 failed_modules = []
@@ -19,7 +18,7 @@ logo_text = """
 @@!  @@@  @@!  @@@  @@! @@! @@!       @@@  @@!       !@@
 !@   @!@  !@!  @!@  !@! !@! !@!      @!@   !@!       !@!
 @!@!@!@   @!@!@!@!  @!! !!@ @!@     !!@    @!!!:!    !@!
-!!!@!!!!  !!!@!!!!  !@!   ! !@!    !!:     !!!!!:    !!!       v""" + bam2ec.__version__ + """
+!!!@!!!!  !!!@!!!!  !@!   ! !@!    !!:     !!!!!:    !!!       v""" + version + """
 !!:  !!!  !!:  !!!  !!:     !!:   !:!      !!:       :!!
 :!:  !:!  :!:  !:!  :!:     :!:  :!:       :!:       :!:
  :: ::::  ::   :::  :::     ::   :: :::::   :: ::::   ::: :::
@@ -77,7 +76,7 @@ class BAM2ECToolsApp(object):
         args = parser.parse_args(sys.argv[1:2])
 
         if args.version:
-            print bam2ec.__version__
+            print version
             sys.exit(1)
 
         if args.help:
