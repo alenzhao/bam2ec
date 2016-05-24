@@ -15,7 +15,6 @@ from emase import AlignmentPropertyMatrix as APM
 
 import bam2ec.ec_file as ec_file
 import bam2ec.emase_file as emase_file
-import bam2ec.util as util
 
 VERBOSE_LEVELV_NUM = 9
 
@@ -124,6 +123,7 @@ def list_to_int(l):
         if onoff == 1:
             c |= 1 << i
     return c
+
 
 def _show_error():
     """
@@ -245,7 +245,7 @@ def dump(binary_file_name, detail=False):
 
                 bits = int_to_list(temp_bits, num_haplotypes)
                 if detail:
-                    print rid, target_ids[lid], bits
+                    LOG.info("{}\t{}\t{}".format(rid, target_ids[lid], bits))
 
         else:
 
@@ -277,7 +277,7 @@ def dump(binary_file_name, detail=False):
                         continue
 
                     bits = int_to_list(temp_bits, num_haplotypes)
-                    LOG.info("{}\t{}\t{}\t".format(rid, target_ids[lid], bits))
+                    LOG.info("{}\t{}\t{}\t# {}".format(rid, target_ids[lid], bits, temp_bits))
     except:
         _show_error()
 
@@ -379,9 +379,6 @@ def bin2emase(binary_file_name, emase_file_name):
                     if bit:
                         apm.set_value(rid, i, lid, 1)
             except Exception, e:
-                print rid
-                print i
-                print lid
                 _show_error()
                 raise e
 
@@ -439,10 +436,8 @@ def ec2emase(file_in, file_out, target_file=None):
 
 
 
-
-
 def emase2ec(file_in, file_out):
-    emase = emase_file.parse(file_in)
+    emasef = emase_file.parse(file_in)
 
     try:
         LOG.info("Generating BIN file...")
@@ -454,25 +449,25 @@ def emase2ec(file_in, file_out):
         LOG.verbose("1\t# VERSION")
 
         # targets
-        LOG.verbose("{:,}\t# NUMBER OF TARGETS".format(len(emase._target_list)))
-        f.write(pack('<i', len(emase._target_list)))
-        for main_target, idx in emase._target_dict.iteritems():
+        LOG.verbose("{:,}\t# NUMBER OF TARGETS".format(len(emasef._target_list)))
+        f.write(pack('<i', len(emasef._target_list)))
+        for main_target, idx in emasef._target_dict.iteritems():
             LOG.verbose("{:,}\t{}\t# {:,}".format(len(main_target), main_target, idx))
             f.write(pack('<i', len(main_target)))
             f.write(pack('<{}s'.format(len(main_target)), main_target))
 
         # haplotypes
-        LOG.verbose("{:,}\t# NUMBER OF HAPLOTYPES".format(len(emase._haplotypes_list)))
-        f.write(pack('<i', len(emase._haplotypes_list)))
-        for idx, hap in enumerate(emase._haplotypes_list):
+        LOG.verbose("{:,}\t# NUMBER OF HAPLOTYPES".format(len(emasef._haplotypes_list)))
+        f.write(pack('<i', len(emasef._haplotypes_list)))
+        for idx, hap in enumerate(emasef._haplotypes_list):
             LOG.verbose("{:,}\t{}\t# {:,}".format(len(hap), hap, idx))
             f.write(pack('<i', len(hap)))
             f.write(pack('<{}s'.format(len(hap)), hap))
 
         # equivalence classes
-        LOG.verbose("{:,}\t# NUMBER OF EQUIVALANCE CLASSES".format(len(emase._ec_list)))
-        f.write(pack('<i', len(emase._ec_list)))
-        for idx, k in enumerate(emase._ec_counts_list):
+        LOG.verbose("{:,}\t# NUMBER OF EQUIVALANCE CLASSES".format(len(emasef._ec_list)))
+        f.write(pack('<i', len(emasef._ec_list)))
+        for idx, k in enumerate(emasef._ec_counts_list):
             # k is the count
             LOG.verbose("{:,}\t# {:,}".format(k, idx))
             f.write(pack('<i', k))
@@ -480,14 +475,14 @@ def emase2ec(file_in, file_out):
         LOG.info("Determining mappings...")
 
         # equivalence class mappings
-        LOG.verbose("{:,}\t# NUMBER OF EQUIVALANCE CLASS MAPPINGS".format(len(emase._alignments)))
-        f.write(pack('<i', len(emase._alignments)))
+        LOG.verbose("{:,}\t# NUMBER OF EQUIVALANCE CLASS MAPPINGS".format(len(emasef._alignments)))
+        f.write(pack('<i', len(emasef._alignments)))
 
-        for idx, alignment in enumerate(emase._alignments):
-            LOG.verbose("{}\t{}\t{}\t# {}\t{}".format(alignment[0], alignment[1], list_to_int(alignment[2]), emase._target_list[alignment[1]], alignment[2]))
+        for idx, alignment in enumerate(emasef._alignments):
+            LOG.verbose("{}\t{}\t{}\t# {}\t{}".format(alignment[0], alignment[1], alignment[2], emasef._target_list[alignment[1]], int_to_list(alignment[2], len(emasef._haplotypes_list))))
             f.write(pack('<i', alignment[0]))
             f.write(pack('<i', alignment[1]))
-            f.write(pack('<i', list_to_int(alignment[2])))
+            f.write(pack('<i', alignment[2]))
 
         f.close()
     except:
@@ -833,14 +828,14 @@ def convert(file_in, file_out, target_file=None, emase=False):
                         else:
                             bits.append(0)
 
-                    LOG.verbose("{}\t{}\t{}\t# {}\t{}".format(ec_idx[k], main_targets[main_target], util.list_to_int(bits), main_target, bits))
+                    LOG.verbose("{}\t{}\t{}\t# {}\t{}".format(ec_idx[k], main_targets[main_target], list_to_int(bits), main_target, bits))
                     f.write(pack('<i', ec_idx[k]))
                     f.write(pack('<i', main_targets[main_target]))
-                    f.write(pack('<i', util.list_to_int(bits)))
+                    f.write(pack('<i', list_to_int(bits)))
 
             f.close()
         except:
-            util._show_error()
+            _show_error()
 
     LOG.info("Done with converting BAM file!")
 

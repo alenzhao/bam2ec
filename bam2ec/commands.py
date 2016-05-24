@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from . import util
+import bam2ec.util as util
 
 LOG = util.get_logger()
 
@@ -75,6 +75,7 @@ def command_convert(raw_args, prog=None):
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
+        util._show_error()
         LOG.error(e)
 
 
@@ -88,7 +89,7 @@ def command_dump(raw_args, prog=None):
         -i, --input <BINary file>        input file
 
     Optional Parameters:
-        None
+        -v, --verbose                    verbose output
 
     Help Parameters:
         -h, --help                       print the help and exit
@@ -115,7 +116,7 @@ def command_dump(raw_args, prog=None):
     parser.add_argument("-i", "--input", dest="input", metavar="Input_File")
 
     # optional
-    # none
+    parser.add_argument("-v", "--verbose", dest="verbose", action='store_true')
 
     # debugging and help
     parser.add_argument("-h", "--help", dest="help", action='store_true')
@@ -133,7 +134,7 @@ def command_dump(raw_args, prog=None):
         print_message()
 
     try:
-        util.dump(args.input)
+        util.dump(args.input, args.verbose)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
@@ -204,7 +205,8 @@ def command_ec2emase(raw_args, prog=None):
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
-        LOG.error(e)
+        util._show_error()
+        #LOG.error(e)
 
 
 def command_emase2ec(raw_args, prog=None):
@@ -271,4 +273,5 @@ def command_emase2ec(raw_args, prog=None):
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
+        util._show_error()
         LOG.error(e)

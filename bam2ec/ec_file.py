@@ -5,9 +5,24 @@ import sys
 import numpy as np
 from collections import OrderedDict
 
-import bam2ec.util as util
 
 LOG = logging.getLogger('BAM2EC')
+
+
+def int_to_list(c, size):
+    ret = [0]*size
+    for i in xrange(0, size):
+        if (c & (1 << i)) != 0:
+            ret[i] = 1
+    return ret
+
+
+def list_to_int(l):
+    c = 0
+    for i, onoff in enumerate(l):
+        if onoff == 1:
+            c |= 1 << i
+    return c
 
 
 class EC:
@@ -235,9 +250,9 @@ def dump(binary_file_name, detail=False):
                 if temp_bits == 0:
                     continue
 
-                bits = util.int_to_list(temp_bits, num_haplotypes)
+                bits = int_to_list(temp_bits, num_haplotypes)
                 if detail:
-                    print rid, target_ids[lid], bits
+                    LOG.info("{}\t{}\t{}".format(rid, target_ids[lid], bits))
 
         else:
 
@@ -268,7 +283,7 @@ def dump(binary_file_name, detail=False):
                     if temp_bits == 0:
                         continue
 
-                    bits = util.int_to_list(temp_bits, num_haplotypes)
+                    bits = int_to_list(temp_bits, num_haplotypes)
                     LOG.info("{}\t{}\t{}\t".format(rid, target_ids[lid], bits))
     except:
         util._show_error()

@@ -5,9 +5,23 @@ from collections import OrderedDict
 
 import emase
 
-import bam2ec.util as util
-
 LOG = logging.getLogger('BAM2EC')
+
+
+def int_to_list(c, size):
+    ret = [0]*size
+    for i in xrange(0, size):
+        if (c & (1 << i)) != 0:
+            ret[i] = 1
+    return ret
+
+
+def list_to_int(l):
+    c = 0
+    for i, onoff in enumerate(l):
+        if onoff == 1:
+            c |= 1 << i
+    return c
 
 
 class EMASE:
@@ -40,7 +54,7 @@ def parse(file_in):
 
     LOG.info("Emase File: {0}".format(file_in))
 
-    f = open(file_in, 'rb')
+    #f = open(file_in, 'rb')
 
     em = EMASE(file_in)
 
@@ -62,7 +76,9 @@ def parse(file_in):
             for hap, hap_idx in em._haplotypes_dict.iteritems():
                 bits.append(apm.data[hap_idx][ec_idx, target_idx])
 
-            em._alignments.append((ec_idx, target_idx, util.list_to_int(bits)))
+            em._alignments.append((ec_idx, target_idx, list_to_int(bits)))
+
+    return em
 
 
 

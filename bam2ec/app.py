@@ -6,7 +6,7 @@ import os
 import sys
 
 from bam2ec import __version__ as version
-from bam2ec import commands
+import bam2ec.commands as commands
 
 ext_modules = ['pysam', 'emase', 'numpy']
 failed_modules = []
