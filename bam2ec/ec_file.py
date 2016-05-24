@@ -5,7 +5,7 @@ import sys
 import numpy as np
 from collections import OrderedDict
 
-from . import utils
+import bam2ec.util as util
 
 LOG = logging.getLogger('BAM2EC')
 
@@ -235,7 +235,7 @@ def dump(binary_file_name, detail=False):
                 if temp_bits == 0:
                     continue
 
-                bits = utils.int_to_list(temp_bits, num_haplotypes)
+                bits = util.int_to_list(temp_bits, num_haplotypes)
                 if detail:
                     print rid, target_ids[lid], bits
 
@@ -268,9 +268,9 @@ def dump(binary_file_name, detail=False):
                     if temp_bits == 0:
                         continue
 
-                    bits = utils.int_to_list(temp_bits, num_haplotypes)
+                    bits = util.int_to_list(temp_bits, num_haplotypes)
                     LOG.info("{}\t{}\t{}\t".format(rid, target_ids[lid], bits))
     except:
-        utils._show_error()
+        util._show_error()
 
 

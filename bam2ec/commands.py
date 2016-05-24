@@ -3,10 +3,9 @@
 import argparse
 import sys
 
-from . import bam2ec
-from . import utils
+from . import util
 
-LOG = bam2ec.get_logger()
+LOG = util.get_logger()
 
 
 def command_convert(raw_args, prog=None):
@@ -58,7 +57,7 @@ def command_convert(raw_args, prog=None):
 
     args = parser.parse_args(raw_args)
 
-    bam2ec.configure_logging(args.debug)
+    util.configure_logging(args.debug)
 
     if args.help:
         print_message()
@@ -72,7 +71,7 @@ def command_convert(raw_args, prog=None):
         print_message()
 
     try:
-        bam2ec.convert(args.input, args.output, args.target, args.emase)
+        util.convert(args.input, args.output, args.target, args.emase)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
@@ -124,7 +123,7 @@ def command_dump(raw_args, prog=None):
 
     args = parser.parse_args(raw_args)
 
-    bam2ec.configure_logging(args.debug)
+    util.configure_logging(args.debug)
 
     if args.help:
         print_message()
@@ -134,7 +133,7 @@ def command_dump(raw_args, prog=None):
         print_message()
 
     try:
-        utils.dump(args.input)
+        util.dump(args.input)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
@@ -187,7 +186,7 @@ def command_ec2emase(raw_args, prog=None):
 
     args = parser.parse_args(raw_args)
 
-    bam2ec.configure_logging(args.debug)
+    util.configure_logging(args.debug)
 
     if args.help:
         print_message()
@@ -201,7 +200,7 @@ def command_ec2emase(raw_args, prog=None):
         print_message()
 
     try:
-        utils.ec2emase(args.input, args.output)
+        util.ec2emase(args.input, args.output)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:
@@ -254,7 +253,7 @@ def command_emase2ec(raw_args, prog=None):
 
     args = parser.parse_args(raw_args)
 
-    bam2ec.configure_logging(args.debug)
+    util.configure_logging(args.debug)
 
     if args.help:
         print_message()
@@ -268,7 +267,7 @@ def command_emase2ec(raw_args, prog=None):
         print_message()
 
     try:
-        utils.emase2ec(args.input, args.output)
+        util.emase2ec(args.input, args.output)
     except KeyboardInterrupt, ki:
         LOG.debug(ki)
     except Exception, e:

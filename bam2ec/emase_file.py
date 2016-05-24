@@ -5,7 +5,7 @@ from collections import OrderedDict
 
 import emase
 
-from . import utils
+import bam2ec.util as util
 
 LOG = logging.getLogger('BAM2EC')
 
@@ -62,7 +62,7 @@ def parse(file_in):
             for hap, hap_idx in em._haplotypes_dict.iteritems():
                 bits.append(apm.data[hap_idx][ec_idx, target_idx])
 
-            em._alignments.append((ec_idx, target_idx, utils.list_to_int(bits)))
+            em._alignments.append((ec_idx, target_idx, util.list_to_int(bits)))
 
 
 
