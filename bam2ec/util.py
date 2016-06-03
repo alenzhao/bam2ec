@@ -560,7 +560,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
     main_targets = OrderedDict()
 
     if target_file:
-        main_targets = util.parse_target_file(target_file)
+        main_targets = parse_target_file(target_file)
         if len(main_targets) == 0:
             LOG.error("Unable to parse target file")
             sys.exit(-1)
@@ -618,6 +618,9 @@ def convert(file_in, file_out, target_file=None, emase=False):
             #       within the sequence dictionary in the header section of a BAM file
             # main_target = the Ensembl id of the transcript
 
+            if alignment.flag == 4:
+                continue
+
             reference_sequence_name = sam_file.getrname(alignment.tid)
             tid = str(alignment.tid)
             main_target = reference_sequence_name.split('_')[0]
@@ -638,7 +641,12 @@ def convert(file_in, file_out, target_file=None, emase=False):
                     main_targets[main_target] = len(main_targets)
 
             target_idx_to_main_target[tid] = main_target
-            haplotypes.add(reference_sequence_name.split('_')[1])
+
+            try:
+                haplotypes.add(reference_sequence_name.split('_')[1])
+            except:
+                LOG.info('Unable to parse Haplotype from {}'.format(reference_sequence_name))
+                return
 
             # read_id = Column 1 from file, the Query template NAME
             if read_id is None:
@@ -703,7 +711,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
     if emase:
         try:
             LOG.info('Creating APM...')
-            if LOG.isEnabledFor(util.VERBOSE_LEVELV_NUM):
+            if LOG.isEnabledFor(VERBOSE_LEVELV_NUM):
                 LOG.verbose("HAPLOTYPES")
                 for h in haplotypes:
                     LOG.verbose(h)
@@ -753,7 +761,7 @@ def convert(file_in, file_out, target_file=None, emase=False):
             apm.finalize()
             apm.save(file_out, title='bam2ec')
         except:
-            util._show_error()
+            _show_error()
     else:
         try:
             LOG.info("Generating BIN file...")
